@@ -1,0 +1,25 @@
+// 📊 データ領域：ステージ1（20問のプールから毎回10問がランダムに選ばれます）
+window.quizStage1 = [
+    { question: "A: Hello! \nB: ________", choices: ["Hello!", "Thank you."], correct: "Hello!", translation: "A: こんにちは！ B: こんにちは！", hint: "🪄 さいしょのごあいさつだよ！", explanation: "あいさつされたら、同じように <b>Hello!</b> とかえそう！" },
+    { question: "A: Good morning! \nB: ________", choices: ["Good morning!", "Good night."], correct: "Good morning!", translation: "A: おはよう！ B: おはよう！", hint: "🪄 あさにおなじみの、まほうのごあいさつだよ。", explanation: "あさのあいさつには <b>Good morning!</b> とかえそう！" },
+    { question: "A: How are you? \nB: ________", choices: ["I'm fine, thank you.", "I'm seven."], correct: "I'm fine, thank you.", translation: "A: 元気？ B: 元気だよ、ありがとう。", hint: "🪄 元気かどうかをきかれているよ。", explanation: "<b>How are you?</b> ときかれたら、<b>I'm fine.</b> とかえすのが大正解！" },
+    { question: "A: What's your name? \nB: ________", choices: ["I'm Emma.", "I like apples."], correct: "I'm Emma.", translation: "A: お名前はなぁに？ B: エマだよ。", hint: "🪄 お名前を教えてあげる魔法の呪文だよ。", explanation: "名前をきかれたときは <b>I'm [名前].</b> と名乗ろう！" },
+    { question: "A: Thank you! \nB: ________", choices: ["You're welcome.", "Goodbye."], correct: "You're welcome.", translation: "A: ありがとう！ B: どういたしまして。", hint: "🪄 「ありがとう」といわれたらなんて言う？", explanation: "「ありがとう」のお返事には <b>You're welcome.</b> がぴったり！" },
+    { question: "A: What is this? \nB: ________ a magic pen.", choices: ["It's", "I am"], correct: "It's", translation: "A: これは何？ B: それは まほうのペンだよ。", hint: "🪄 モノ（これ）についてきかれているよ。", explanation: "モノをさしてきかれたら、<b>It's 〜</b>（それは〜です）で答えるよ。" },
+    { question: "A: Do you like cats? \nB: Yes, I ________.", choices: ["do", "am"], correct: "do", translation: "A: ネコはすき？ B: うん、すきだよ。", hint: "🪄 「Do you 〜 ?」でお返事も合わせてね。", explanation: "<b>Do you 〜 ?</b> ときかれたら、<b>Yes, I do.</b> と答えるのがルール！" },
+    { question: "A: Goodbye! \nB: ________", choices: ["See you!", "Nice to meet you."], correct: "See you!", translation: "A: さようなら！ B: またね！", hint: "🪄 バイバイのあいさつだよ。", explanation: "<b>Goodbye!</b> とわかれるときは、<b>See you!</b>（またね！）とかえそう。" },
+    { question: "A: Here you are. \nB: ________", choices: ["Thank you.", "No, thank you."], correct: "Thank you.", translation: "A: はい、どうぞ。 B: ありがとう。", hint: "🪄 モノを「どうぞ」と渡されたよ。", explanation: "<b>Here you are.</b> とモノをもらったら <b>Thank you.</b> と言おう！" },
+    { question: "A: Can you swim? \nB: No, I ________.", choices: ["can't", "don't"], correct: "can't", translation: "A: およげる？ B: ううん、およげないんだ。", hint: "🪄 「〜できる？」のCanできかれているよ。", explanation: "<b>Can</b> できかれたら、できないときは <b>I can't</b> になるんだ！" },
+    // 💡 ここから新しく追加された10問（合計20問のプール）
+    { question: "A: What is your favorite color? \nB: I like ________.", choices: ["orange", "tennis"], correct: "orange", translation: "A: 一番すきな色はなに？ B: オレンジが好きだよ。", hint: "🪄 「color（いろ）」についてきかれているよ。", explanation: "色をきかれているから、パステルでもおなじみの <b>orange</b> が正解！" },
+    { question: "A: Is this your umbrella? \nB: Yes, it ________.", choices: ["is", "does"], correct: "is", translation: "A: これはあなたの傘？ B: うん、そうだよ。", hint: "🪄 「Is this 〜?」できかれているよ。あたまの言葉に注目！", explanation: "<b>Is</b> できかれた質問には、<b>Yes, it is.</b> と同じ言葉のまほうでかえそう。" },
+    { question: "A: Touch your ________. \nB: OK!", choices: ["nose", "desk"], correct: "nose", translation: "A: お鼻（はな）をさわってね。 B: はーい！", hint: "🪄 体（からだ）のパーツのなまえをえらんでね。", explanation: "「さわる（Touch）」といわれたから、体の一部である <b>nose</b>（はな）が正解！" },
+    { question: "A: How many apples do you have? \nB: I have ________.", choices: ["three", "red"], correct: "three", translation: "A: リンゴは何個持ってるの？ B: 3個持っているよ。", hint: "🪄 「How many（なんこ）」とかずをきかれているよ。", explanation: "数をきかれているから、数字の <b>three</b>（3）で答えるのが大正解！" },
+    { question: "A: Stand up, please. \nB: ________", choices: ["OK.", "No."], correct: "OK.", translation: "A: 立ってくださいね。 B: わかりました。", hint: "🪄 先生（せんせい）に「立ってね」と優しく言われたよ。", explanation: "おねがいされたら、きもちよく <b>OK.</b>（はーい！）とお返事しよう！" },
+    { question: "A: What day is it today? \nB: It's ________.", choices: ["Sunday", "October"], correct: "Sunday", translation: "A: 今日は何曜日？ B: 日曜日だよ。", hint: "🪄 「曜日（ようび）」のまほうの言葉をえらぼう。", explanation: "何曜日かをきくときは <b>Sunday</b>（日曜日）などの曜日を答えるよ。Octoberは「10月」だよ。" },
+    { question: "A: Open your book, please. \nB: ________", choices: ["All right.", "Thank you."], correct: "All right.", translation: "A: 本を開いてください。 B: わかりました。", hint: "🪄 「本をひらいてね」と言われて「わかったよ！」と答える呪文だよ。", explanation: "「いいですよ、わかりました」と引き受けるときは <b>All right.</b> のまほうがぴったり！" },
+    { question: "A: Nice to meet you. \nB: ________", choices: ["Nice to meet you, too.", "I'm ten."], correct: "Nice to meet you, too.", translation: "A: はじめまして！ B: こちらこそ、はじめまして！", hint: "🪄 はじめて会ったときのごあいさつだよ。うしろに「〜もね」をつけてね。", explanation: "「はじめまして」と言われたら、おしりに <b>too</b>（〜もね）をつけた言葉をかえそう！" },
+    { question: "A: Who is that tall man? \nB: He is my ________.",
+    choices: ["father", "mother"], correct: "father", translation: "A: あの背の高い男の人はだれ？ B: 私のお父さんだよ。", hint: "🪄 「man（男（おとこ）の人）」のことをお話ししているよ。", explanation: "男の人（man）をさしているから、<b>father</b>（お父さん）が正解。motherはお母さん（女の人）だね。" },
+    { question: "A: Are you hungry? \nB: Yes, ________.", choices: ["I am", "I'm not"], correct: "I am", translation: "A: おなかはすいてる？ B: うん、すいてるよ。", hint: "🪄 「Yes（うん）」とお返事しているから、すいているのかな？", explanation: "<b>Yes</b> と答えているので、おなかがすいている <b>I am.</b> が大正解！" }
+];

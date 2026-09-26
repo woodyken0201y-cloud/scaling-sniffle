@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>えいごのまほうクイズ</title>
+    <style>
+        :root {
+            --primary: #ffb74d; --primary-light: #ffe9cc; --primary-dark: #f57c00;
+            --accent: #ff8a65; --text: #5d4037; --bg: #fff9f2;
+        }
+        * { box-sizing: border-box; font-family: sans-serif; color: var(--text); }
+        body { background: var(--bg); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { background: white; border: 4px solid var(--primary-light); border-radius: 24px; padding: 24px; width: 100%; max-width: 500px; box-shadow: 0 8px 24px rgba(245,124,0,0.1); text-align: center; }
+        .container::before { content: "✨ 🪄 ✨"; display: block; font-size: 20px; margin-bottom: 10px; color: var(--primary); }
+        h1 { font-size: 24px; color: var(--primary-dark); margin: 0 0 20px 0; }
+        .screen { display: none; }
+        .screen.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        button { cursor: pointer; border: none; transition: all 0.2s; }
+        button:active { transform: scale(0.96); }
+        .stage-btn { background: white; border: 3px solid var(--primary); border-radius: 16px; padding: 16px; width: 100%; margin-bottom: 16px; font-size: 18px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 0 var(--primary-light); }
+        .stage-btn span { color: var(--primary-dark); }
+        .progress-bar { background: #e0e0e0; border-radius: 10px; height: 12px; width: 100%; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { background: var(--primary); height: 100%; width: 0%; transition: width 0.3s; }
+        .question-box { font-size: 22px; font-weight: bold; margin-bottom: 15px; min-height: 60px; display: flex; justify-content: center; align-items: center; padding: 10px; background: var(--bg); border-radius: 16px; }
+        .translation-box { font-size: 15px; color: #795548; margin-bottom: 20px; min-height: 24px; font-weight: bold; }
+        .hint-toggle-btn { background: var(--primary-light); color: var(--primary-dark); padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: bold; margin-bottom: 15px; }
+        .hint-text { display: none; background: #fffde7; border: 2px dashed #fff176; padding: 12px; border-radius: 12px; font-size: 14px; margin-bottom: 20px; text-align: left; line-height: 1.5; }
+        .hint-text.open { display: block; animation: fadeIn 0.3s; }
+        .choices-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        .choice-btn { background: white; border: 3px solid #ffe0b2; border-radius: 16px; padding: 14px 20px; font-size: 18px; font-weight: bold; box-shadow: 0 4px 0 #ffe0b2; }
+        .choice-btn:hover:not(:disabled) { background: var(--bg); border-color: var(--primary); box-shadow: 0 4px 0 var(--primary); }
+        .choice-btn.correct-ans { background: #e8f5e9 !important; border-color: #81c784 !important; box-shadow: 0 4px 0 #81c784 !important; color: #2e7d32 !important; }
+        .choice-btn.wrong-ans { background: #ffebee !important; border-color: #e57373 !important; box-shadow: 0 4px 0 #e57373 !important; color: #c62828 !important; }
+        .feedback-box { display: none; background: var(--bg); border: 2px solid var(--primary-light); border-radius: 16px; padding: 16px; margin-top: 15px; text-align: left; }
+        .feedback-box.active { display: block; animation: fadeIn 0.3s; }
+        .result-mark { font-size: 24px; font-weight: bold; text-align: center; margin-bottom: 10px; }
+        .explanation-text { font-size: 14px; line-height: 1.6; }
+        .next-btn { background: var(--accent); color: white; font-size: 18px; font-weight: bold; padding: 12px 30px; border-radius: 25px; margin-top: 15px; box-shadow: 0 4px 0 #d84315; width: 100%; }
+        .score-circle { width: 120px; height: 120px; border-radius: 50%; background: var(--primary-light); line-height: 120px; font-size: 28px; font-weight: bold; color: var(--primary-dark); margin: 20px auto; }
+        .message-box { font-size: 16px; font-weight: bold; line-height: 1.6; margin-bottom: 25px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 🏠 メニュー画面 -->
+        <div id="menu-screen" class="screen active">
+            <h1>🪄 えいごのまほうクイズ 🪄</h1>
+            <p>挑戦するステージを選んでね！</p>
+            <div style="margin-top: 30px;">
+                <button class="stage-btn" onclick="startStage(1)"><span>🔮 ステージ 1</span> <span>きほんのまほう ＞</span></button>
+                <button class="stage-btn" onclick="startStage(2)"><span>⚡ ステージ 2</span> <span>ひっかけのまほう ＞</span></button>
+                <button class="stage-btn" onclick="startStage(3)"><span>👑 ステージ 3</span> <span>たいわのまほう ＞</span></button>
+<button class="stage-btn" onclick="startStage(4)"><span>🚀 ステージ 4</span> <span>おうようのまほう ＞</span></button>
+            </div>
+        </div>
+
+        <!-- 📝 クイズ画面 -->
+        <div id="quiz-screen" class="screen">
+            <h1 id="stage-title">ステージ</h1>
+            <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+            <div id="question-text" class="question-box"></div>
+            <div id="translation-text" class="translation-box"></div>
+            <button id="hint-toggle" class="hint-toggle-btn" onclick="toggleHint()">🪄 まほうのヒントをみる</button>
+            <div id="hint-text" class="hint-text"></div>
+            <div id="choices-container" class="choices-container">
+                <button class="choice-btn" onclick="selectAnswer(0)"></button>
+                <button class="choice-btn" onclick="selectAnswer(1)"></button>
+            </div>
+            <div id="feedback-box" class="feedback-box">
+                <div id="result-mark" class="result-mark"></div>
+                <div id="explanation-text" class="explanation-text"></div>
+                <button id="next-btn" class="next-btn" onclick="nextQuestion()">つぎへすすむ 🪄</button>
+            </div>
+        </div>
+
+                       <!-- 🎉 結果画面 -->
+        <div id="result-screen" class="screen">
+            <h1>✨ ステージクリア！ ✨</h1>
+            <div id="score-display" class="score-circle">0 / 10</div>
+            <div id="message-display" class="message-box"></div>
+            
+            <!-- 🪄 まちがえた問題の復習ボタン（最初は非表示） -->
+            <button id="review-btn" class="next-btn" style="background: var(--accent); box-shadow: 0 4px 0 #d84315; margin-bottom: 12px; display: none;" onclick="startReview()">
+                まちがえた問題をやりなおす 🪄
+            </button>
+            
+            <!-- 🏠 メニューにもどるボタン（1つだけに整理） -->
+            <button class="next-btn" style="background: var(--primary-dark); box-shadow: 0 4px 0 #b35700;" onclick="backToMenu()">
+                メニューにもどる 🏠
+            </button>
+        </div>
+
+    <!-- 📊 問題データの外部読み込み -->
+    <script src="stage1.js"></script>
+    <script src="stage2.js"></script>
+    <script src="stage3.js"></script>
+    <script src="stage4.js"></script>
+
+        <script>
+        let currentStage = 1, currentQuestions = [], currentQuestionIndex = 0, score = 0, hasAnswered = false, currentShuffledChoices = [];
+        // 👇 ここから追記：復習用の記録とフラグ
+        let missedQuestions = []; 
+        let isReviewMode = false;
+
+        // 復習モードをスタートさせる魔法
+        function startReview() {
+            currentQuestions = [...missedQuestions];
+            currentQuestionIndex = 0;
+            score = 0;
+            isReviewMode = true;
+            document.getElementById('stage-title').textContent = `🔮 ふくしゅうのまほう`;
+            showScreen('quiz-screen');
+            loadQuestion();
+        }
+        // 👆 ここまで追記
+
+        function playCorrectSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const playNode = (freq, delay, duration) => {
+                    setTimeout(() => {
+                        const osc = ctx.createOscillator(), gain = ctx.createGain();
+                        osc.type = 'sine'; osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                        gain.gain.setValueAtTime(0.8, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+                        osc.connect(gain); gain.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + duration);
+                    }, delay);
+                };
+                playNode(659.25, 0, 0.3); playNode(783.99, 120, 0.4);
+            } catch (e) { console.log(e); }
+        }
+
+        function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+
+                                function startStage(stageNum) {
+            currentStage = stageNum;
+            isReviewMode = false; // ★通常モードにする
+            missedQuestions = []; // ★新しく間違えた問題をリセット
+
+            // 1. 元のプールからすべての問題データをコピーして持ってくる
+            let allQuestions = window['quizStage' + stageNum] || [];
+            if (allQuestions.length === 0) {
+                alert(`🪄 まだ「stage${stageNum}.js」のファイルがないか、index.htmlと同じ場所に置かれていないよ！`);
+                return;
+            }
+
+            // 2. 持ってきた問題をランダムにシャッフルする魔法
+            allQuestions.sort(() => Math.random() - 0.5);
+
+            // 3. シャッフルした頭から「最大10問」だけを切り取って今回の問題にする！
+            currentQuestions = allQuestions.slice(0, 10);
+
+            currentQuestionIndex = 0; score = 0;
+            const titles = ["", "きほんのまほう", "ひっかけのまほう", "たいわのまほう", "おうようのまほう"];
+            document.getElementById('stage-title').textContent = `🔮 ${titles[stageNum]}`;
+            showScreen('quiz-screen'); loadQuestion();
+        }
+
+        function loadQuestion() {
+            hasAnswered = false;
+            document.getElementById('hint-text').classList.remove('open');
+            document.getElementById('hint-text').style.display = 'none';
+            document.getElementById('hint-toggle').style.display = 'inline-block';
+            document.getElementById('translation-text').textContent = '';
+            document.getElementById('feedback-box').classList.remove('active');
+
+            const q = currentQuestions[currentQuestionIndex];
+            document.getElementById('question-text').textContent = q.question;
+            document.getElementById('hint-text').innerHTML = q.hint;
+
+            const progressPercent = (currentQuestionIndex / currentQuestions.length) * 100;
+            document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+
+            currentShuffledChoices = [...q.choices];
+            if (Math.random() > 0.5) currentShuffledChoices.reverse();
+
+            const buttons = document.querySelectorAll('.choice-btn');
+            buttons.forEach((btn, idx) => { btn.textContent = currentShuffledChoices[idx]; btn.className = 'choice-btn'; btn.disabled = false; });
+        }
+
+        function toggleHint() {
+            const hint = document.getElementById('hint-text');
+            if (hint.classList.contains('open')) { hint.classList.remove('open'); setTimeout(() => hint.style.display = 'none', 300); }
+            else { hint.style.display = 'block'; setTimeout(() => hint.classList.add('open'), 10); }
+        }
+
+        function selectAnswer(selectedIdx) {
+            if (hasAnswered) return; hasAnswered = true;
+            const q = currentQuestions[currentQuestionIndex];
+            const selectedText = currentShuffledChoices[selectedIdx];
+            const isCorrect = (selectedText === q.correct);
+
+            document.querySelectorAll('.choice-btn').forEach((btn, idx) => {
+                btn.disabled = true;
+                if (currentShuffledChoices[idx] === q.correct) btn.classList.add('correct-ans');
+                else if (idx === selectedIdx) btn.classList.add('wrong-ans');
+            });
+
+            document.getElementById('translation-text').textContent = `💡 （${q.translation}）`;
+            document.getElementById('hint-toggle').style.display = 'none'; document.getElementById('hint-text').style.display = 'none';
+
+            const markBox = document.getElementById('result-mark');
+            if (isCorrect) { 
+                score++; markBox.innerHTML = "<span style='color: #4caf50;'>⭕ 正解！</span>"; playCorrectSound(); 
+            } else { 
+                markBox.innerHTML = "<span style='color: #f44336;'>❌ おしい！</span>"; 
+                // ★間違えた問題を記憶（まだ復習モードじゃない時だけ保存する）
+                if (!isReviewMode) { missedQuestions.push(q); }
+            }
+
+            document.getElementById('explanation-text').innerHTML = q.explanation;
+            document.getElementById('feedback-box').classList.add('active');
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuestions.length) loadQuestion();
+            else showResult();
+        }
+
+                function showResult() {
+            document.getElementById('progress-fill').style.width = `100%`;
+            document.getElementById('score-display').textContent = `${score} / ${currentQuestions.length}`;
+            const msgBox = document.getElementById('message-display');
+            const reviewBtn = document.getElementById('review-btn');
+
+            // ★復習ボタンの表示コントロール
+            if (isReviewMode) {
+                // 【A】復習モードが終わったときの画面
+                reviewBtn.style.display = "none"; // 復習が終わったらボタンは隠す
+                if (score === currentQuestions.length) {
+                    msgBox.innerHTML = "<span style='color: #e65100; font-size: 20px;'>✨ ふくしゅう大成功！ ✨</span><br>にがてな問題もぜんぶクリアできたね！まほうの力がかんぺきになったよ！";
+                } else {
+                    msgBox.innerHTML = `おしい！あとすこし！<br>もう一回メニューにもどってから、チャレンジしてみてね。`;
+                }
+            } else {
+                // 【B】ふつうのステージが終わったときの画面
+                if (score === currentQuestions.length) {
+                    // 満点（全問正解）なら復習ボタンは出さない
+                    msgBox.innerHTML = "<span style='color: #e65100; font-size: 20px;'>👑 てんさいまほうつかい！ 👑</span><br>すごすぎる！ぜんぶ大正解だよ！きみの英語はパーフェクトのまほうだね！";
+                    reviewBtn.style.display = "none";
+                } else {
+                    // 1問でも間違えていたら、ここで復習ボタンを「確実に表示（block）」する
+                    if (score >= 7) {
+                        msgBox.innerHTML = "<span style='color: #f57c00; font-size: 18px;'>🎉 ごうかく！やったね！ 🎉</span><br>とってもじょうず！まほうの力がどんどん強くなっているよ。";
+                    } else {
+                        msgBox.innerHTML = "おしい！あとすこしで合格だよ。<br>もう一回チャレンジして、まほうの呪文をおぼえちゃおう！";
+                    }
+                    reviewBtn.style.display = "block"; // ★これでボタンが出ます！
+                }
+            }
+            showScreen('result-screen');
+        }
+
+        function backToMenu() { showScreen('menu-screen'); }
+    </script>
+</body>
+</html>
